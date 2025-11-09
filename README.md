@@ -51,35 +51,7 @@ Frontend → Backend (API + JWT Auth) → AI Engine (Model Prediction) → Datab
 
 ---
 
-### 📂 Folder Structure
 
-```
-skincare-ai/
-├── backend/
-│   ├── controllers/
-│   ├── services/
-│   ├── routes/
-│   ├── prisma/
-│   │   ├── schema.prisma
-│   ├── ai_model.py
-│   ├── makeAdmin.js
-│   └── server.js
-│
-├── frontend/
-│   ├── src/
-│   │   ├── pages/
-│   │   ├── components/
-│   │   ├── services/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   └── vite.config.js
-│
-├── database/
-│   └── SQLite.db
-└── README.md
-```
-
----
 
 ### ⚙️ Environment Variables Setup
 
