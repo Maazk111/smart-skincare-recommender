@@ -41,10 +41,10 @@ export const isTokenBlacklisted = (token) => {
 };
 
 const algorithm = "aes-256-ctr";
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY.trim();
-const IV = crypto.randomBytes(16);
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || "default-encryption-key-for-development-32-chars-long";
 
 export const saveRecommendation = async (data) => {
+  const IV = crypto.randomBytes(16); // Generate fresh IV for each encryption
   const cipher = crypto.createCipheriv(algorithm, ENCRYPTION_KEY, IV);
   const encryptedRecommendation =
     cipher.update(data.recommendedProduct, "utf8", "hex") + cipher.final("hex");
@@ -70,7 +70,9 @@ export const decryptRecommendation = (encryptedData, iv) => {
 export const getAIRecommendation = (userInput) => {
   return new Promise((resolve, reject) => {
     const inputString = JSON.stringify(userInput);
-    const pythonProcess = spawn("python", [process.env.PYTHON_SCRIPT_PATH, inputString]);
+
+    // ✅ use "python" instead of "python3" for Windows
+    const pythonProcess = spawn("python", [process.env.PYTHON_SCRIPT_PATH || "ai_model.py", inputString]);
 
     let output = "";
     let error = "";

@@ -1,26 +1,38 @@
 import prisma from "./prisma/prismaClient.js";
+import bcrypt from "bcryptjs";
 
-const makeAdmin = async (email) => {
+const createDefaultAdmin = async () => {
   try {
-    // Demote the current admin to a user
-    await prisma.user.updateMany({
-      where: { role: "ADMIN" },
-      data: { role: "USER" },
+    // Check if admin already exists
+    const existingAdmin = await prisma.user.findFirst({
+      where: { role: "ADMIN" }
     });
 
-    // Promote the specified user to admin
-    const user = await prisma.user.update({
-      where: { email },
-      data: { role: "ADMIN" },
+    if (existingAdmin) {
+      console.log('Admin already exists:', existingAdmin.email);
+      return;
+    }
+
+    // Create default admin
+    const hashedPassword = await bcrypt.hash('admin', 10);
+    const admin = await prisma.user.create({
+      data: {
+        name: 'Admin',
+        email: 'admin@gmail.com',
+        password: hashedPassword,
+        role: 'ADMIN'
+      }
     });
 
-    console.log(`User ${user.email} is now an admin!`);
+    console.log('Default admin created:', admin.email);
+    console.log('Email: admin@gmail.com');
+    console.log('Password: admin');
   } catch (error) {
-    console.error("Error updating user role:", error);
+    console.error('Error creating admin:', error);
   } finally {
     await prisma.$disconnect();
   }
 };
-// mmaazk111@gmail.com
-// Call the function with the email of the user to promote
-makeAdmin("zaryab@gmail.com");
+
+// Create default admin
+createDefaultAdmin();
