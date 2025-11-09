@@ -1,17 +1,19 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import userRoutes from "./routes/users.js";
-import aiRoutes from "./routes/users.js";
-import dotenv from "dotenv";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
-dotenv.config();
+app.use(cors());
 
 // User Routes
 app.use("/users", userRoutes);
 
-// AI Routes
-app.use("/ai", aiRoutes);
+// AI Routes (same as user routes for now)
+app.use("/ai", userRoutes);
 
 const PORT = process.env.PORT || 7653;
 app.listen(PORT, () => {
